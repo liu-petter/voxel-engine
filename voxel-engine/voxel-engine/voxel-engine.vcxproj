@@ -136,6 +136,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="VkWindow.cpp" />
+    <ClCompile Include="VoxelEngine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VkWindow.hpp" />
+    <ClInclude Include="VoxelEngine.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
