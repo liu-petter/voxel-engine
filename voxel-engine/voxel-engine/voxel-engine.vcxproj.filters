@@ -13,24 +13,62 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{0ea755d0-f89a-4712-aa31-72e0f77e0c6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VkWindow.cpp">
+    <ClCompile Include="ve_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VoxelEngine.cpp">
+    <ClCompile Include="voxel_engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ve_pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ve_device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ve_swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VkWindow.hpp">
+    <ClInclude Include="ve_window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VoxelEngine.hpp">
+    <ClInclude Include="voxel_engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ve_pipeline.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ve_device.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ve_swap_chain.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="simple_shader.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="simple_shader.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="compile.bat">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="simple_shader.frag.spv">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="simple_shader.vert.spv">
+      <Filter>Shader Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
