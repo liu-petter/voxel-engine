@@ -18,56 +18,56 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\voxel_engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ve_window.cpp">
+    <ClCompile Include="src\ve_device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="voxel_engine.cpp">
+    <ClCompile Include="src\ve_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ve_pipeline.cpp">
+    <ClCompile Include="src\ve_swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ve_device.cpp">
+    <ClCompile Include="src\ve_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ve_swap_chain.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ve_window.hpp">
+    <ClInclude Include="src\ve_window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="voxel_engine.hpp">
+    <ClInclude Include="src\voxel_engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ve_pipeline.hpp">
+    <ClInclude Include="src\ve_device.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ve_device.hpp">
+    <ClInclude Include="src\ve_pipeline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ve_swap_chain.hpp">
+    <ClInclude Include="src\ve_swap_chain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="simple_shader.frag">
+    <None Include="shaders\simple_shader.frag.spv">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="simple_shader.vert">
+    <None Include="shaders\simple_shader.vert">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="compile.bat">
+    <None Include="shaders\simple_shader.vert.spv">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="simple_shader.frag.spv">
+    <None Include="shaders\compile.bat">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="simple_shader.vert.spv">
+    <None Include="shaders\simple_shader.frag">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

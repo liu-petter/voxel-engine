@@ -34,7 +34,7 @@ void voxel_engine::create_pipeline() {
 	auto pipeline_config = ve_pipeline::default_pipeline_config_info(_swap_chain.width(), _swap_chain.height());
 	pipeline_config.render_pass = _swap_chain.getRenderPass();
 	pipeline_config.pipeline_layout = _pipeline_layout;
-	_pipeline = std::make_unique<ve_pipeline>(_device, "simple_shader.vert.spv", "simple_shader.frag.spv", pipeline_config);
+	_pipeline = std::make_unique<ve_pipeline>(_device, ".\\shaders\\simple_shader.vert.spv", ".\\shaders\\simple_shader.frag.spv", pipeline_config);
 }
 
 void voxel_engine::create_command_buffers() {
