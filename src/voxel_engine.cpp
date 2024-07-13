@@ -1,6 +1,7 @@
 #include "voxel_engine.hpp"
 
 voxel_engine::voxel_engine() {
+	load_models();
 	create_pipeline_layout();
 	create_pipeline();
 	create_command_buffers();
@@ -16,6 +17,15 @@ void voxel_engine::run_app() {
 		draw_frame();
 	}
 	vkDeviceWaitIdle(_device.device());
+}
+
+void voxel_engine::load_models() {
+	std::vector<ve_model::vertex> vertices{
+		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+		{ {-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f} }
+	};
+	_model = std::make_unique<ve_model>(_device, vertices);
 }
 
 void voxel_engine::create_pipeline_layout() {
@@ -75,7 +85,8 @@ void voxel_engine::create_command_buffers() {
 		vkCmdBeginRenderPass(_command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
 		_pipeline->bind(_command_buffers[i]);
-		vkCmdDraw(_command_buffers[i], 3, 1, 0, 0);
+		_model->bind(_command_buffers[i]);
+		_model->draw(_command_buffers[i]);
 
 		vkCmdEndRenderPass(_command_buffers[i]);
 		if (vkEndCommandBuffer(_command_buffers[i]) != VK_SUCCESS) {

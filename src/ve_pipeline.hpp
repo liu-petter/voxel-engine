@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ve_device.hpp"
+#include "ve_model.hpp"
 
 #include <string>
 #include <vector>
@@ -31,7 +32,7 @@ public:
 		const pipeline_config_info &config_info);
 	~ve_pipeline();
 	ve_pipeline(const ve_pipeline&) = delete;
-	void operator=(const ve_pipeline&) = delete;
+	ve_pipeline& operator=(const ve_pipeline&) = delete;
 
 	void bind(VkCommandBuffer command_buffer);
 

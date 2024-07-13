@@ -151,6 +151,7 @@ call compile.bat</Command>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ve_device.cpp" />
+    <ClCompile Include="src\ve_model.cpp" />
     <ClCompile Include="src\ve_pipeline.cpp" />
     <ClCompile Include="src\ve_swap_chain.cpp" />
     <ClCompile Include="src\ve_window.cpp" />
@@ -158,6 +159,7 @@ call compile.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ve_device.hpp" />
+    <ClInclude Include="src\ve_model.hpp" />
     <ClInclude Include="src\ve_pipeline.hpp" />
     <ClInclude Include="src\ve_swap_chain.hpp" />
     <ClInclude Include="src\ve_window.hpp" />

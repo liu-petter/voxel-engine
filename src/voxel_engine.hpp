@@ -4,6 +4,7 @@
 #include "ve_pipeline.hpp"
 #include "ve_device.hpp"
 #include "ve_swap_chain.hpp"
+#include "ve_model.hpp"
 
 #include <memory>
 #include <vector>
@@ -23,6 +24,7 @@ public:
 
 	void run_app();
 private:
+	void load_models();
 	void create_pipeline_layout();
 	void create_pipeline();
 	void create_command_buffers();
@@ -34,4 +36,5 @@ private:
 	std::unique_ptr<ve_pipeline> _pipeline;
 	VkPipelineLayout _pipeline_layout;
 	std::vector<VkCommandBuffer> _command_buffers;
+	std::unique_ptr<ve_model> _model;
 };
