@@ -11,12 +11,22 @@
 
 ve_swap_chain::ve_swap_chain(ve_device &deviceRef, VkExtent2D extent)
     : device{deviceRef}, windowExtent{extent} {
-  createSwapChain();
-  createImageViews();
-  createRenderPass();
-  createDepthResources();
-  createFramebuffers();
-  createSyncObjects();
+    init();
+}
+
+ve_swap_chain::ve_swap_chain(ve_device& deviceRef, VkExtent2D extent, std::shared_ptr<ve_swap_chain> previous)
+    : device{ deviceRef }, windowExtent{ extent }, old_swap_chain{ previous } {
+    init();
+    old_swap_chain = nullptr;
+}
+
+void ve_swap_chain::init() {
+    createSwapChain();
+    createImageViews();
+    createRenderPass();
+    createDepthResources();
+    createFramebuffers();
+    createSyncObjects();
 }
 
 ve_swap_chain::~ve_swap_chain() {
@@ -160,7 +170,7 @@ void ve_swap_chain::createSwapChain() {
   createInfo.presentMode = presentMode;
   createInfo.clipped = VK_TRUE;
 
-  createInfo.oldSwapchain = VK_NULL_HANDLE;
+  createInfo.oldSwapchain = old_swap_chain == nullptr ? VK_NULL_HANDLE : old_swap_chain->swapChain;
 
   if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
     throw std::runtime_error("failed to create swap chain!");
@@ -360,7 +370,7 @@ void ve_swap_chain::createSyncObjects() {
 VkSurfaceFormatKHR ve_swap_chain::chooseSwapSurfaceFormat(
     const std::vector<VkSurfaceFormatKHR> &availableFormats) {
   for (const auto &availableFormat : availableFormats) {
-    if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
+    if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
         availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
       return availableFormat;
     }

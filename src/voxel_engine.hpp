@@ -28,11 +28,14 @@ private:
 	void create_pipeline_layout();
 	void create_pipeline();
 	void create_command_buffers();
+	void free_command_buffers();
 	void draw_frame();
+	void recreate_swap_chain();
+	void record_command_buffer(int image_index);
 
 	ve_window _window{ WIDTH, HEIGHT, "Voxel Engine" };
 	ve_device _device{ _window };
-	ve_swap_chain _swap_chain{ _device, _window.get_extent() };
+	std::unique_ptr<ve_swap_chain> _swap_chain;
 	std::unique_ptr<ve_pipeline> _pipeline;
 	VkPipelineLayout _pipeline_layout;
 	std::vector<VkCommandBuffer> _command_buffers;

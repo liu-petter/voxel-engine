@@ -19,7 +19,16 @@ void ve_window::init_window() {
 	glfwInit();
 	// disable OpenGL context
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 	_window = glfwCreateWindow(_width, _height, _window_name.c_str(), nullptr, nullptr);
+	glfwSetWindowUserPointer(_window, this);
+	glfwSetFramebufferSizeCallback(_window, frame_buffer_resize_callback);
+}
+
+void ve_window::frame_buffer_resize_callback(GLFWwindow* window, int width, int height) {
+	auto temp_window = reinterpret_cast<ve_window*>(glfwGetWindowUserPointer(window));
+	temp_window->_frame_buffer_resized = true;
+	temp_window->_width = width;
+	temp_window->_height = height;
 }
