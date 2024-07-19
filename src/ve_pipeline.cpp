@@ -117,7 +117,6 @@ void ve_pipeline::create_shader_module(
 
 // set up pipeline settings
 void ve_pipeline::default_pipeline_config_info(pipeline_config_info& config_info) {
-
 	config_info.input_assembly_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	config_info.input_assembly_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	config_info.input_assembly_info.primitiveRestartEnable = VK_FALSE;

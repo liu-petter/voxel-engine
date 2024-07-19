@@ -1,5 +1,14 @@
 #include "voxel_engine.hpp"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
+struct simple_push_constant_data {
+	glm::vec2 offset;
+	alignas(16) glm::vec3 color;
+};
+
 voxel_engine::voxel_engine() {
 	load_models();
 	create_pipeline_layout();
@@ -29,12 +38,17 @@ void voxel_engine::load_models() {
 }
 
 void voxel_engine::create_pipeline_layout() {
+	VkPushConstantRange push_constant_range{};
+	push_constant_range.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+	push_constant_range.offset = 0;
+	push_constant_range.size = sizeof(simple_push_constant_data);
+
 	VkPipelineLayoutCreateInfo pipeline_layout_info{};
 	pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipeline_layout_info.setLayoutCount = 0;
 	pipeline_layout_info.pSetLayouts = nullptr;
-	pipeline_layout_info.pushConstantRangeCount = 0;
-	pipeline_layout_info.pPushConstantRanges = nullptr;
+	pipeline_layout_info.pushConstantRangeCount = 1;
+	pipeline_layout_info.pPushConstantRanges = &push_constant_range;
 	if (vkCreatePipelineLayout(_device.device(), &pipeline_layout_info, nullptr, &_pipeline_layout) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create pipeline layout");
 	}
@@ -97,6 +111,9 @@ void voxel_engine::free_command_buffers() {
 
 
 void voxel_engine::record_command_buffer(int image_index) {
+	static int frame = 0;
+	frame = (frame + 1) % 100;
+
 	VkCommandBufferBeginInfo begin_info{};
 	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -113,7 +130,7 @@ void voxel_engine::record_command_buffer(int image_index) {
 	render_pass_info.renderArea.extent = _swap_chain->getSwapChainExtent();
 
 	std::array<VkClearValue, 2> clear_values{};
-	clear_values[0].color = { 0.1f, 0.1f, 0.1f,  1.0f };
+	clear_values[0].color = { 0.01f, 0.01f, 0.01f,  1.0f };
 	clear_values[1].depthStencil = { 1.0f, 0 };
 	render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
 	render_pass_info.pClearValues = clear_values.data();
@@ -133,7 +150,23 @@ void voxel_engine::record_command_buffer(int image_index) {
 
 	_pipeline->bind(_command_buffers[image_index]);
 	_model->bind(_command_buffers[image_index]);
-	_model->draw(_command_buffers[image_index]);
+
+	for (int j = 0; j < 4; j++) {
+		simple_push_constant_data push{};
+		push.offset = { -0.5f + frame * 0.02f, -0.4f + j * 0.25f };
+		push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
+
+		vkCmdPushConstants(
+			_command_buffers[image_index], 
+			_pipeline_layout, 
+			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 
+			0, 
+			sizeof(simple_push_constant_data), 
+			&push
+		);
+
+		_model->draw(_command_buffers[image_index]);
+	}
 
 	vkCmdEndRenderPass(_command_buffers[image_index]);
 	if (vkEndCommandBuffer(_command_buffers[image_index]) != VK_SUCCESS) {
