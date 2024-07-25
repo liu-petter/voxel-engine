@@ -3,14 +3,19 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
+#include <iostream>
+
 
 struct simple_push_constant_data {
+	glm::mat2 transform{1.f}; 
 	glm::vec2 offset;
 	alignas(16) glm::vec3 color;
 };
 
 voxel_engine::voxel_engine() {
-	load_models();
+	load_game_objects();
 	create_pipeline_layout();
 	recreate_swap_chain();
 	create_command_buffers();
@@ -28,13 +33,22 @@ void voxel_engine::run_app() {
 	vkDeviceWaitIdle(_device.device());
 }
 
-void voxel_engine::load_models() {
+void voxel_engine::load_game_objects() {
 	std::vector<ve_model::vertex> vertices{
 		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
 		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 	};
-	_model = std::make_unique<ve_model>(_device, vertices);
+	auto model = std::make_shared<ve_model>(_device, vertices);
+	
+	auto triangle = ve_game_object::create_game_object();
+	triangle._model = model;
+	triangle._color = { .1f, .8f, .1f };
+	triangle._transform_2d.translation.x = .2f;
+	triangle._transform_2d.scale = { .2f, .5f };
+	triangle._transform_2d.rotation = .25f * glm::two_pi<float>();
+
+	_game_objects.push_back(std::move(triangle));
 }
 
 void voxel_engine::create_pipeline_layout() {
@@ -110,10 +124,7 @@ void voxel_engine::free_command_buffers() {
 }
 
 
-void voxel_engine::record_command_buffer(int image_index) {
-	static int frame = 0;
-	frame = (frame + 1) % 100;
-
+void voxel_engine::record_command_buffer(int image_index) {		
 	VkCommandBufferBeginInfo begin_info{};
 	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -148,29 +159,35 @@ void voxel_engine::record_command_buffer(int image_index) {
 	vkCmdSetViewport(_command_buffers[image_index], 0, 1, &viewport);
 	vkCmdSetScissor(_command_buffers[image_index], 0, 1, &scissor);
 
-	_pipeline->bind(_command_buffers[image_index]);
-	_model->bind(_command_buffers[image_index]);
-
-	for (int j = 0; j < 4; j++) {
-		simple_push_constant_data push{};
-		push.offset = { -0.5f + frame * 0.02f, -0.4f + j * 0.25f };
-		push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
-
-		vkCmdPushConstants(
-			_command_buffers[image_index], 
-			_pipeline_layout, 
-			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 
-			0, 
-			sizeof(simple_push_constant_data), 
-			&push
-		);
-
-		_model->draw(_command_buffers[image_index]);
-	}
+	render_game_objects(_command_buffers[image_index]);
 
 	vkCmdEndRenderPass(_command_buffers[image_index]);
 	if (vkEndCommandBuffer(_command_buffers[image_index]) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to record command buffer");
+	}
+}
+
+void voxel_engine::render_game_objects(VkCommandBuffer command_buffer) {
+	_pipeline->bind(command_buffer);
+
+	for (auto& obj : _game_objects) {
+		obj._transform_2d.rotation = glm::mod(obj._transform_2d.rotation + 0.01f, glm::two_pi<float>());
+
+		simple_push_constant_data push{};
+		push.offset = obj._transform_2d.translation;
+		push.color = obj._color;
+		push.transform = obj._transform_2d.mat2();
+
+		vkCmdPushConstants(
+			command_buffer,
+			_pipeline_layout,
+			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+			0,
+			sizeof(simple_push_constant_data),
+			&push
+		);
+		obj._model->bind(command_buffer);
+		obj._model->draw(command_buffer);
 	}
 }
 
